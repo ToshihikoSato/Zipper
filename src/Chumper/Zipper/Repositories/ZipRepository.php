@@ -39,6 +39,8 @@ class ZipRepository implements RepositoryInterface
      */
     public function addFile($pathToFile, $pathInArchive)
     {
+        // 2016/07/29 ToshihikoSato Next line is added to change encoding of a filename in archive.
+        $pathInArchive = mb_convert_encoding($pathInArchive, 'CP932', 'UTF-8');
         $this->archive->addFile($pathToFile, $pathInArchive);
     }
 
