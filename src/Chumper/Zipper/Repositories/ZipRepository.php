@@ -39,7 +39,14 @@ class ZipRepository implements RepositoryInterface
      */
     public function addFile($pathToFile, $pathInArchive)
     {
-        // 2016/07/29 ToshihikoSato Next line is added to change encoding of a filename in archive.
+        // 2017/09/16 ToshihikoSato Next line is added to change the encoding of a filename in archive from NFD to FNC
+        // in order to run under macOS properly.
+        if (class_exists('Normalizer')) {
+            if (\Normalizer::isNormalized($pathInArchive, \Normalizer::FORM_D)) {
+                $pathInArchive = \Normalizer::normalize($pathInArchive, \Normalizer::FORM_C);
+            }
+        }
+        // 2016/07/29 ToshihikoSato Next line is added to change the encoding of a filename in archive for Windows SJIS.
         $pathInArchive = mb_convert_encoding($pathInArchive, 'CP932', 'UTF-8');
         $this->archive->addFile($pathToFile, $pathInArchive);
     }
